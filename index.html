@@ -1,1 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>あの頃君は若かった～ ｜ 家族の関わりと感謝の気持ち</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <!-- ===== ヘッダー ===== -->
+  <header class="app-header no-print">
+    <div class="title-wrap">
+      <h1 class="app-title">あの頃君は若かった～</h1>
+      <p class="app-sub">生活単元学習「家族の関わりと感謝の気持ち」</p>
+    </div>
+    <div class="header-right">
+      <span id="currentName" class="current-name"></span>
+      <button id="btnChangeStudent" class="btn btn-ghost hidden" type="button">👤 生徒をかえる</button>
+      <button id="btnTeacher" class="btn btn-ghost" type="button">🔧 先生メニュー</button>
+    </div>
+  </header>
+
+  <!-- ===== 生徒選択画面 ===== -->
+  <main id="screenSelect" class="screen no-print">
+    <section class="panel">
+      <h2 class="sec-title">だれの ページを ひらきますか？</h2>
+      <div id="studentGrid" class="student-grid"></div>
+      <p id="noStudentMsg" class="note hidden">
+        まだ 生徒が とうろく されていません。<br>
+        右上の「🔧 先生メニュー」から 生徒の名前と写真を とうろく してください。
+      </p>
+    </section>
+  </main>
+
+  <!-- ===== メイン画面 ===== -->
+  <main id="screenMain" class="screen hidden">
+    <nav class="tabs no-print" id="tabs">
+      <button class="tab active" data-step="1" type="button"><span class="tab-num">1</span>くらべよう</button>
+      <button class="tab" data-step="2" type="button"><span class="tab-num">2</span>小学部のころ</button>
+      <button class="tab" data-step="3" type="button"><span class="tab-num">3</span>できるように<br class="sp">なったこと</button>
+      <button class="tab" data-step="4" type="button"><span class="tab-num">4</span>家族への<br class="sp">ありがとう</button>
+      <button class="tab" data-step="5" type="button"><span class="tab-num">5</span>まとめ・<br class="sp">いんさつ</button>
+    </nav>
+
+    <!-- STEP1 写真をくらべよう -->
+    <section class="step panel no-print" data-step="1">
+      <h2 class="sec-title">
+        <span>① 写真を くらべよう</span>
+        <button class="btn-speak" data-speak="写真を くらべよう。スライダーを うごかすと、むかしの 写真から 今の 写真に かわっていくよ。" type="button" aria-label="よみあげ">🔊</button>
+      </h2>
+
+      <div class="morph-area">
+        <div class="morph-frame" id="morphFrame">
+          <div class="morph-empty" id="morphEmpty">写真が まだ ありません<br><small>（先生メニューで 写真を 設定してください）</small></div>
+        </div>
+        <div class="morph-label" id="morphLabel"></div>
+        <div class="morph-controls">
+          <span class="ctl-cap">むかし</span>
+          <input type="range" id="morphSlider" min="0" max="100" value="0" step="1" aria-label="写真のうつりかわり">
+          <span class="ctl-cap">いま</span>
+        </div>
+        <div class="morph-buttons">
+          <button class="btn btn-sub" id="btnMorphStart" type="button">⏮ むかし</button>
+          <button class="btn btn-main" id="btnMorphPlay" type="button">▶ じどうで うごかす</button>
+          <button class="btn btn-sub" id="btnMorphEnd" type="button">いま ⏭</button>
+        </div>
+        <div class="speed-row">
+          <span>はやさ：</span>
+          <button class="btn-mini speed" data-speed="8000" type="button">ゆっくり</button>
+          <button class="btn-mini speed active" data-speed="4000" type="button">ふつう</button>
+          <button class="btn-mini speed" data-speed="2000" type="button">はやい</button>
+        </div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+
+      <div class="side-by-side">
+        <figure class="pair-photo">
+          <figcaption>小学部の ころ</figcaption>
+          <div class="photo-box" id="pairOld"></div>
+        </figure>
+        <div class="pair-arrow">➡</div>
+        <figure class="pair-photo">
+          <figcaption>中学部の いま</figcaption>
+          <div class="photo-box" id="pairNew"></div>
+        </figure>
+      </div>
+
+      <div class="q-block">
+        <h3 class="q-title">
+          なにが かわったかな？
+          <button class="btn-speak" data-speak="なにが かわったかな？ あてはまる ものを えらびましょう。" type="button">🔊</button>
+        </h3>
+        <div class="chips mode-select" id="chipsChanges"></div>
+        <textarea class="free mode-write" id="txtChanges" rows="3" placeholder="きづいたことを 書こう"></textarea>
+      </div>
+    </section>
+
+    <!-- STEP2 小学部のころ -->
+    <section class="step panel no-print hidden" data-step="2">
+      <h2 class="sec-title">
+        <span>② 小学部の ころの わたし</span>
+        <button class="btn-speak" data-speak="小学部の ころの わたし。すきなこと、にがてなことを えらんだり 書いたり しよう。" type="button">🔊</button>
+      </h2>
+      <div class="step2-layout">
+        <div class="photo-box photo-ref" id="refOld"></div>
+        <div class="step2-body">
+          <div class="q-block">
+            <h3 class="q-title">💗 すきだったこと <button class="btn-speak" data-speak="すきだったこと" type="button">🔊</button></h3>
+            <div class="chips mode-select" id="chipsLikes"></div>
+            <textarea class="free mode-write" id="txtLikes" rows="2" placeholder="すきだったことを 書こう"></textarea>
+          </div>
+          <div class="q-block">
+            <h3 class="q-title">💧 にがてだったこと <button class="btn-speak" data-speak="にがてだったこと" type="button">🔊</button></h3>
+            <div class="chips mode-select" id="chipsDislikes"></div>
+            <textarea class="free mode-write" id="txtDislikes" rows="2" placeholder="にがてだったことを 書こう"></textarea>
+          </div>
+          <div class="q-block">
+            <h3 class="q-title">🙂 どんな 子だった？ <button class="btn-speak" data-speak="どんな 子 だった？" type="button">🔊</button></h3>
+            <div class="chips mode-select" id="chipsPerson"></div>
+            <textarea class="free mode-write" id="txtPerson" rows="2" placeholder="小学部の ころの ようすを 書こう"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP3 できるようになったこと -->
+    <section class="step panel no-print hidden" data-step="3">
+      <h2 class="sec-title">
+        <span>③ 小学部では できなかったけど、中学部で できるように なったこと</span>
+        <button class="btn-speak" data-speak="小学部では できなかったけど、中学部で できるように なったこと を えらびましょう。" type="button">🔊</button>
+      </h2>
+
+      <div class="view-switch">
+        <button class="view-btn active" data-view="self" type="button">⭐ じぶんから 見て</button>
+        <button class="view-btn" data-view="teacher" type="button">🏫 先生から 見て</button>
+      </div>
+      <p class="view-hint" id="viewHint"></p>
+
+      <div id="growthGroups" class="mode-select"></div>
+      <div class="q-block mode-write">
+        <h3 class="q-title" id="growthTextTitle">じぶんで 書こう</h3>
+        <textarea class="free" id="txtGrowth" rows="3"></textarea>
+      </div>
+    </section>
+
+    <!-- STEP4 家族への感謝 -->
+    <section class="step panel no-print hidden" data-step="4">
+      <h2 class="sec-title">
+        <span>④ 成長を ささえてくれた 家族へ ありがとう</span>
+        <button class="btn-speak" data-speak="できるように なるまで、家族が ささえて くれたね。だれが、どんなことを してくれたかな？" type="button">🔊</button>
+      </h2>
+      <p class="lead">できるように なるまで、家族が たすけたり ささえたり してくれたね。<br>家庭の 生活は、家族の 協力で なりたっています。</p>
+
+      <div class="q-block">
+        <h3 class="q-title">👪 だれが ささえて くれた？ <button class="btn-speak" data-speak="だれが ささえて くれた？" type="button">🔊</button></h3>
+        <div class="chips mode-select" id="chipsWho"></div>
+        <textarea class="free mode-write" id="txtWho" rows="1" placeholder="ほかの人（名前など）"></textarea>
+      </div>
+      <div class="q-block">
+        <h3 class="q-title">🤝 どんなことを してくれた？ <button class="btn-speak" data-speak="どんなことを してくれた？" type="button">🔊</button></h3>
+        <div class="chips mode-select" id="chipsWhat"></div>
+        <textarea class="free mode-write" id="txtWhat" rows="2" placeholder="してくれたことを 書こう"></textarea>
+      </div>
+      <div class="q-block">
+        <h3 class="q-title">💌 ありがとうの メッセージ <button class="btn-speak" data-speak="ありがとうの メッセージ" type="button">🔊</button></h3>
+        <div class="chips mode-select single" id="chipsThanks"></div>
+        <textarea class="free mode-write" id="txtThanks" rows="3" placeholder="家族への ありがとうを 書こう"></textarea>
+        <div class="thanks-card" id="thanksPreview"></div>
+      </div>
+    </section>
+
+    <!-- STEP5 まとめ・印刷 -->
+    <section class="step panel no-print hidden" data-step="5">
+      <h2 class="sec-title"><span>⑤ まとめシート</span></h2>
+      <div class="print-options">
+        <label><input type="checkbox" id="optFamily" checked> 家族への ありがとう も いんさつする</label>
+        <label><input type="checkbox" id="optBlank"> 書きこみ用（記入らんを 空けて いんさつ）</label>
+        <label><input type="checkbox" id="optTeacher" checked> 先生から 見た 成長 も のせる</label>
+      </div>
+      <button class="btn btn-main btn-print" id="btnPrint" type="button">🖨 いんさつする</button>
+      <p class="note">A4よこ で いんさつ されます。iPadでは 共有ボタン →「プリント」でも いんさつ できます。</p>
+    </section>
+
+    <!-- まとめシート（STEP5でプレビュー表示・印刷対象） -->
+    <div id="sheetWrap" class="sheet-wrap hidden">
+      <article class="sheet" id="sheet"></article>
+    </div>
+
+    <div class="step-nav no-print">
+      <button class="btn btn-sub" id="btnPrev" type="button">◀ もどる</button>
+      <button class="btn btn-main" id="btnNext" type="button">つぎへ ▶</button>
+    </div>
+  </main>
+
+  <!-- ===== 先生メニュー ===== -->
+  <div id="teacherModal" class="modal hidden no-print" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2>🔧 先生メニュー</h2>
+        <button class="btn btn-ghost" id="btnCloseTeacher" type="button">✕ とじる</button>
+      </div>
+
+      <div class="t-section">
+        <h3>生徒の とうろく</h3>
+        <div class="t-row">
+          <input type="text" id="newStudentName" placeholder="生徒の名前（例：やまなし たろう）">
+          <button class="btn btn-main" id="btnAddStudent" type="button">＋ 追加</button>
+        </div>
+        <ul id="tStudentList" class="t-list"></ul>
+      </div>
+
+      <div id="tEditArea" class="t-section hidden">
+        <h3 id="tEditTitle">生徒の設定</h3>
+
+        <div class="t-field">
+          <label>名前</label>
+          <input type="text" id="tName">
+        </div>
+
+        <div class="t-field">
+          <label>入力のしかた（認知段階に応じて）</label>
+          <div class="seg" id="tMode">
+            <button data-mode="select" type="button">えらぶ だけ</button>
+            <button data-mode="both" type="button">えらぶ＋書く</button>
+            <button data-mode="write" type="button">書く だけ</button>
+          </div>
+        </div>
+
+        <div class="t-field">
+          <label>写真（古い順にならべます。いちばん上＝小学部、いちばん下＝中学部の今）</label>
+          <ul id="tPhotoList" class="t-photos"></ul>
+          <div class="t-row">
+            <select id="tPhotoLabel">
+              <option>小学部1年</option><option>小学部2年</option><option>小学部3年</option>
+              <option>小学部4年</option><option>小学部5年</option><option>小学部6年</option>
+              <option>中学部1年</option><option>中学部2年</option><option>中学部3年</option>
+              <option>入学のころ</option><option>いま</option>
+            </select>
+            <label class="btn btn-main file-btn">📷 写真を追加
+              <input type="file" id="tPhotoInput" accept="image/*" multiple>
+            </label>
+          </div>
+          <p class="note small">写真は この端末の中だけに 保存されます（インターネットには 送られません）。</p>
+        </div>
+
+        <div class="t-field">
+          <button class="btn btn-danger" id="btnResetAnswers" type="button">この生徒の 回答を リセット</button>
+        </div>
+      </div>
+
+      <div class="t-section">
+        <h3>データの 保存・読みこみ</h3>
+        <p class="note small">iPadの設定によっては データが 消えることがあります。ときどき「書き出し」で 保存してください。</p>
+        <div class="t-row">
+          <button class="btn btn-sub" id="btnExport" type="button">⬇ 書き出し（JSON）</button>
+          <label class="btn btn-sub file-btn">⬆ 読みこみ
+            <input type="file" id="importInput" accept="application/json,.json">
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast no-print"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
